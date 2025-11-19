@@ -1,0 +1,223 @@
+:root {
+  --accent: #6D6CFF;
+  --muted: #8b8b98;
+  --success: #2ecc71;
+  --shadow: 0 10px 30px rgba(20, 20, 30, 0.25);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Make entire window transparent; draw only necessary pieces */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  -webkit-user-select: none;
+  -webkit-app-region: no-drag;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* container now minimal — no heavy white box */
+#widget {
+  width: 420px;
+  padding: 12px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  /* No opaque background — rely on drop shadow & subtle blur using a thin translucent backdrop */
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.02));
+  backdrop-filter: blur(6px) saturate(120%);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* header area (draggable) */
+.header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  -webkit-app-region: drag;
+}
+
+/* eyes */
+.eyes {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding-left: 6px;
+}
+
+.eye {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  -webkit-app-region: no-drag;
+}
+
+.eye .pupil {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #111;
+  transform: translate(0px, 0px);
+  transition: transform 0.06s linear;
+}
+
+/* title */
+.title {
+  margin-left: 6px;
+}
+
+.title .big {
+  font-weight: 700;
+  font-size: 18px;
+  color: #fff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.title .date {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* tasks list */
+.tasks {
+  margin: 10px 0 6px 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* each task row */
+.task {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  -webkit-app-region: no-drag;
+}
+
+.check {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  transition: transform .12s ease;
+}
+
+.check.empty {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--muted);
+  border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.check.done {
+  background: linear-gradient(90deg, #2ecc71, #0fb16d);
+  color: white;
+}
+
+.label {
+  flex: 1;
+  font-size: 14px;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: text;
+}
+
+/* delete X button at right */
+.deleteBtn {
+  margin-left: 8px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 16px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.deleteBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ff6b6b;
+}
+
+/* Add button bigger & more visible */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  -webkit-app-region: no-drag;
+}
+
+button.ghost {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+button.bigAdd {
+  background: linear-gradient(90deg, var(--accent), #8b8bff);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  border: none;
+  box-shadow: 0 6px 18px rgba(109, 108, 255, 0.18);
+}
+
+.hint {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 12px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+kbd {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+  color: #fff;
+}
+
+/* small responsiveness */
+@media (max-width:420px) {
+  #widget {
+    width: 360px;
+  }
+}

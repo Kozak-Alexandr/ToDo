@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data:;">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Today</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- NOTE: window background is transparent; the widget draws only needed elements -->
+    <div id="widget" aria-live="polite">
+      <div class="header" id="header">
+        <div class="eyes" id="eyes" aria-hidden="true">
+          <div class="eye left">
+            <div class="pupil"></div>
+          </div>
+          <div class="eye right">
+            <div class="pupil"></div>
+          </div>
+        </div>
+
+        <div class="title">
+          <div class="big">Today</div>
+          <div class="date" id="date"></div>
+        </div>
+      </div>
+
+      <ul id="tasks" class="tasks"></ul>
+
+      <div class="controls">
+        <button id="addBtn" class="bigAdd">Add task</button>
+        <button id="clearBtn" class="ghost">Clear done</button>
+        <div class="hint">Quit: <kbd>Ctrl/Cmd</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd></div>
+      </div>
+    </div>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>

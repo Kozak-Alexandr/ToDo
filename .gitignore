@@ -1,0 +1,9 @@
+node_modules/
+dist/
+build-tools/
+inno-setup/
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+C:\InnoSetup/

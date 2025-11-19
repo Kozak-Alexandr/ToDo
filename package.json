@@ -1,0 +1,64 @@
+{
+  "name": "always-on-tasks",
+  "version": "0.2.0",
+  "description": "Always-on-display tasks widget",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis",
+    "dist:mac": "electron-builder --mac",
+    "dist:linux": "electron-builder --linux",
+    "package": "electron-packager . --platform=win32 --arch=x64 --out=dist --overwrite",
+    "clean": "rimraf dist/*.exe dist/*.zip build"
+  },
+  "devDependencies": {
+    "electron": "^26.0.0",
+    "electron-builder": "^24.8.0",
+    "electron-packager": "^17.1.2",
+    "rimraf": "^5.0.0"
+  },
+  "build": {
+    "productName": "AOD Tasks",
+    "appId": "com.yourname.aodtasks",
+    "files": [
+      "**/*"
+    ],
+    "win": {
+      "sign": null,
+      "target": [
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "include": "build/installer.nsh",
+      "installerLanguages": [
+        "en_US",
+        "de_DE",
+        "fr_FR",
+        "es_ES",
+        "it_IT",
+        "ru_RU",
+        "zh_CN"
+      ],
+      "language": 1033,
+      "multiLanguageInstaller": true
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility"
+    }
+  }
+}

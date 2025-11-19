@@ -1,0 +1,65 @@
+name: Build Cross-Platform Releases
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v1.0.0
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Package for Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          npm run package
+          mkdir -p release
+          Compress-Archive -Path dist/always-on-tasks-win32-x64 -DestinationPath release/AOD-Tasks-Windows.zip
+        shell: pwsh
+      
+      - name: Package for macOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          npx electron-packager . "AOD Tasks" --platform=darwin --arch=x64 --out=dist --overwrite
+          cd dist
+          zip -r ../release/AOD-Tasks-macOS.zip "AOD Tasks-darwin-x64"
+          cd ..
+      
+      - name: Package for Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          npx electron-packager . "AOD Tasks" --platform=linux --arch=x64 --out=dist --overwrite
+          mkdir -p release
+          cd dist
+          tar -czf ../release/AOD-Tasks-Linux.tar.gz "AOD Tasks-linux-x64"
+          cd ..
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.os }}-build
+          path: release/*
+      
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
