@@ -37,6 +37,7 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           npx electron-packager . "AOD Tasks" --platform=darwin --arch=x64 --out=dist --overwrite
+          mkdir -p release
           cd dist
           zip -r ../release/AOD-Tasks-macOS.zip "AOD Tasks-darwin-x64"
           cd ..
