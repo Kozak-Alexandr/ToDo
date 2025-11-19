@@ -30,31 +30,42 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      - name: Package for Windows
+      - name: Build with electron-builder (Windows)
+        if: matrix.os == 'windows-latest'
+        run: npx electron-builder --win nsis --publish never
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Build with electron-builder (macOS)
+        if: matrix.os == 'macos-latest'
+        run: npx electron-builder --mac dmg --publish never
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Build with electron-builder (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: npx electron-builder --linux AppImage --publish never
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Prepare artifacts (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          npm run package
-          mkdir -p release
-          Compress-Archive -Path dist/always-on-tasks-win32-x64 -DestinationPath release/AOD-Tasks-Windows.zip
+          mkdir release
+          Copy-Item dist/*.exe release/ -ErrorAction SilentlyContinue
         shell: pwsh
       
-      - name: Package for macOS
+      - name: Prepare artifacts (macOS)
         if: matrix.os == 'macos-latest'
         run: |
-          npx electron-packager . "AOD Tasks" --platform=darwin --arch=x64 --out=dist --overwrite
           mkdir -p release
-          cd dist
-          zip -r ../release/AOD-Tasks-macOS.zip "AOD Tasks-darwin-x64"
-          cd ..
+          cp dist/*.dmg release/ || true
       
-      - name: Package for Linux
+      - name: Prepare artifacts (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          npx electron-packager . "AOD Tasks" --platform=linux --arch=x64 --out=dist --overwrite
           mkdir -p release
-          cd dist
-          tar -czf ../release/AOD-Tasks-Linux.tar.gz "AOD Tasks-linux-x64"
-          cd ..
+          cp dist/*.AppImage release/ || true
       
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
